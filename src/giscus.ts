@@ -370,6 +370,7 @@ export class GiscusWidget extends LitElement {
     return html`
       <iframe
         crossorigin
+        credentialless
         title="Comments"
         scrolling="no"
         class="loading"
