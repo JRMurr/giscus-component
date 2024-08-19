@@ -377,6 +377,7 @@ export class GiscusWidget extends LitElement {
         loading=${this.loading}
         allow="clipboard-write"
         part="iframe"
+        crossorigin
       ></iframe>
     `;
   }
