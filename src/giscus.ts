@@ -1,6 +1,6 @@
-import { html, css, LitElement, PropertyDeclaration } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { createRef, ref, Ref } from 'lit/directives/ref.js';
+import { html, css, LitElement, PropertyDeclaration } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { createRef, ref, Ref } from "lit/directives/ref.js";
 import {
   Repo,
   Mapping,
@@ -9,8 +9,8 @@ import {
   Theme,
   AvailableLanguage,
   Loading,
-} from './types';
-export * from './types';
+} from "./types";
+export * from "./types";
 
 function safeCustomElement(tagName: string): ReturnType<typeof customElement> {
   // Prevents re-registering an element.
@@ -20,13 +20,13 @@ function safeCustomElement(tagName: string): ReturnType<typeof customElement> {
 /**
  * Widget element for giscus.
  */
-@safeCustomElement('giscus-widget')
+@safeCustomElement("giscus-widget")
 export class GiscusWidget extends LitElement {
-  private GISCUS_SESSION_KEY = 'giscus-session';
-  private GISCUS_DEFAULT_HOST = 'https://giscus.app';
+  private GISCUS_SESSION_KEY = "giscus-session";
+  private GISCUS_DEFAULT_HOST = "https://giscus.app";
   private ERROR_SUGGESTION = `Please consider reporting this error at https://github.com/giscus/giscus/issues/new.`;
 
-  private __session = '';
+  private __session = "";
   private _iframeRef: Ref<HTMLIFrameElement> = createRef();
   private messageEventHandler = this.handleMessageEvent.bind(this);
   private hasLoaded = false;
@@ -106,53 +106,53 @@ export class GiscusWidget extends LitElement {
    * Use strict title matching.
    */
   @property({ reflect: true })
-  strict: BooleanString = '0';
+  strict: BooleanString = "0";
 
   /**
    * Enable reactions to the main post of the discussion.
    */
   @property({ reflect: true })
-  reactionsEnabled: BooleanString = '1';
+  reactionsEnabled: BooleanString = "1";
 
   /**
    * Emit the discussion metadata periodically to the parent page.
    */
   @property({ reflect: true })
-  emitMetadata: BooleanString = '0';
+  emitMetadata: BooleanString = "0";
 
   /**
    * Placement of the comment box (`top` or `bottom`).
    */
   @property({ reflect: true })
-  inputPosition: InputPosition = 'bottom';
+  inputPosition: InputPosition = "bottom";
 
   /**
    * Theme that giscus will be displayed in.
    */
   @property({ reflect: true })
-  theme: Theme = 'light';
+  theme: Theme = "light";
 
   /**
    * Language that giscus will be displayed in.
    */
   @property({ reflect: true })
-  lang: AvailableLanguage = 'en';
+  lang: AvailableLanguage = "en";
 
   /**
    * Whether the iframe should be loaded lazily or eagerly.
    */
   @property({ reflect: true })
-  loading: Loading = 'eager';
+  loading: Loading = "eager";
 
   constructor() {
     super();
     this.setupSession();
-    window.addEventListener('message', this.messageEventHandler);
+    window.addEventListener("message", this.messageEventHandler);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('message', this.messageEventHandler);
+    window.removeEventListener("message", this.messageEventHandler);
   }
 
   private _formatError(message: string) {
@@ -163,14 +163,14 @@ export class GiscusWidget extends LitElement {
     const origin = location.href;
     const url = new URL(origin);
     const savedSession = localStorage.getItem(this.GISCUS_SESSION_KEY);
-    const urlSession = url.searchParams.get('giscus') ?? '';
-    this.__session = '';
+    const urlSession = url.searchParams.get("giscus") ?? "";
+    this.__session = "";
 
     if (urlSession) {
       localStorage.setItem(this.GISCUS_SESSION_KEY, JSON.stringify(urlSession));
       this.__session = urlSession;
-      url.searchParams.delete('giscus');
-      url.hash = '';
+      url.searchParams.delete("giscus");
+      url.hash = "";
       history.replaceState(undefined, document.title, url.toString());
       return;
     }
@@ -191,7 +191,7 @@ export class GiscusWidget extends LitElement {
 
   private signOut() {
     localStorage.removeItem(this.GISCUS_SESSION_KEY);
-    this.__session = '';
+    this.__session = "";
     this.update(new Map());
   }
 
@@ -199,7 +199,7 @@ export class GiscusWidget extends LitElement {
     if (event.origin !== this._host) return;
 
     const { data } = event;
-    if (!(typeof data === 'object' && data.giscus)) return;
+    if (!(typeof data === "object" && data.giscus)) return;
 
     if (this.iframeRef && data.giscus.resizeHeight) {
       this.iframeRef.style.height = `${data.giscus.resizeHeight}px`;
@@ -216,9 +216,9 @@ export class GiscusWidget extends LitElement {
     const message: string = data.giscus.error;
 
     if (
-      message.includes('Bad credentials') ||
-      message.includes('Invalid state value') ||
-      message.includes('State has expired')
+      message.includes("Bad credentials") ||
+      message.includes("Invalid state value") ||
+      message.includes("State has expired")
     ) {
       // Might be because token is expired or other causes
       if (localStorage.getItem(this.GISCUS_SESSION_KEY) !== null) {
@@ -234,7 +234,7 @@ export class GiscusWidget extends LitElement {
       );
     }
 
-    if (message.includes('Discussion not found')) {
+    if (message.includes("Discussion not found")) {
       console.warn(
         `[giscus] ${message}. A new discussion will be created if a comment/reaction is submitted.`
       );
@@ -258,9 +258,9 @@ export class GiscusWidget extends LitElement {
         categoryId: this.categoryId,
         term: this.getTerm(),
         number: +this.getNumber(),
-        strict: this.strict === '1',
-        reactionsEnabled: this.reactionsEnabled === '1',
-        emitMetadata: this.emitMetadata === '1',
+        strict: this.strict === "1",
+        reactionsEnabled: this.reactionsEnabled === "1",
+        emitMetadata: this.emitMetadata === "1",
         inputPosition: this.inputPosition,
         theme: this.theme,
         lang: this.lang,
@@ -271,8 +271,8 @@ export class GiscusWidget extends LitElement {
   }
 
   firstUpdated() {
-    this.iframeRef?.addEventListener('load', () => {
-      this.iframeRef?.classList.remove('loading');
+    this.iframeRef?.addEventListener("load", () => {
+      this.iframeRef?.classList.remove("loading");
       this.hasLoaded = true;
       // Make sure to update the config in case the iframe is loaded lazily.
       this.updateConfig();
@@ -285,7 +285,7 @@ export class GiscusWidget extends LitElement {
     options?: PropertyDeclaration<unknown, unknown>
   ): void {
     // Only rerender (update) on initial load or if the host changes.
-    if (!this.hasUpdated || name === 'host') {
+    if (!this.hasUpdated || name === "host") {
       super.requestUpdate(name, oldValue, options);
       return;
     }
@@ -294,60 +294,60 @@ export class GiscusWidget extends LitElement {
   }
 
   private getMetaContent(property: string, og = false) {
-    const ogSelector = og ? `meta[property='og:${property}'],` : '';
+    const ogSelector = og ? `meta[property='og:${property}'],` : "";
     const element = document.querySelector<HTMLMetaElement>(
       ogSelector + `meta[name='${property}']`
     );
 
-    return element ? element.content : '';
+    return element ? element.content : "";
   }
 
   private _getCleanedUrl() {
     const url = new URL(location.href);
-    url.searchParams.delete('giscus');
-    url.hash = '';
+    url.searchParams.delete("giscus");
+    url.hash = "";
     return url;
   }
 
   private getTerm() {
     switch (this.mapping) {
-      case 'url':
+      case "url":
         return this._getCleanedUrl().toString();
-      case 'title':
+      case "title":
         return document.title;
-      case 'og:title':
-        return this.getMetaContent('title', true);
-      case 'specific':
-        return this.term ?? '';
-      case 'number':
-        return '';
-      case 'pathname':
+      case "og:title":
+        return this.getMetaContent("title", true);
+      case "specific":
+        return this.term ?? "";
+      case "number":
+        return "";
+      case "pathname":
       default:
         return location.pathname.length < 2
-          ? 'index'
-          : location.pathname.substring(1).replace(/\.\w+$/, '');
+          ? "index"
+          : location.pathname.substring(1).replace(/\.\w+$/, "");
     }
   }
 
   private getNumber() {
-    return this.mapping === 'number' ? (this.term ?? '') : '';
+    return this.mapping === "number" ? (this.term ?? "") : "";
   }
 
   private getIframeSrc() {
     const url = this._getCleanedUrl().toString();
 
-    const origin = `${url}${this.id ? '#' + this.id : ''}`;
+    const origin = `${url}${this.id ? "#" + this.id : ""}`;
 
-    const description = this.getMetaContent('description', true);
-    const backLink = this.getMetaContent('giscus:backlink') || url;
+    const description = this.getMetaContent("description", true);
+    const backLink = this.getMetaContent("giscus:backlink") || url;
 
     const params: Record<string, string> = {
       origin,
       session: this.__session,
       repo: this.repo,
-      repoId: this.repoId ?? '',
-      category: this.category ?? '',
-      categoryId: this.categoryId ?? '',
+      repoId: this.repoId ?? "",
+      category: this.category ?? "",
+      categoryId: this.categoryId ?? "",
       term: this.getTerm(),
       number: this.getNumber(),
       strict: this.strict,
@@ -360,7 +360,7 @@ export class GiscusWidget extends LitElement {
     };
 
     const host = this._host;
-    const locale = this.lang ? `/${this.lang}` : '';
+    const locale = this.lang ? `/${this.lang}` : "";
     const searchParams = new URLSearchParams(params);
 
     return `${host}${locale}/widget?${searchParams.toString()}`;
@@ -369,6 +369,7 @@ export class GiscusWidget extends LitElement {
   render() {
     return html`
       <iframe
+        crossorigin
         title="Comments"
         scrolling="no"
         class="loading"
@@ -377,7 +378,6 @@ export class GiscusWidget extends LitElement {
         loading=${this.loading}
         allow="clipboard-write"
         part="iframe"
-        crossorigin
       ></iframe>
     `;
   }
@@ -385,7 +385,7 @@ export class GiscusWidget extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'giscus-widget': GiscusWidget;
+    "giscus-widget": GiscusWidget;
   }
 }
 
