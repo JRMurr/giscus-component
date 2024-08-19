@@ -23,7 +23,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "prepare": "npm run build",
+    "prepare": "npm run build ",
     "build": "tsc && vite build",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
